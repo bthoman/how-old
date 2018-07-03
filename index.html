@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <title>How Old</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+
+        </head>
+    
+        <body class="bg-light" onload="onLoad()">
+
+            <div class="container">
+              <div class="py-5 text-center">
+                <h2>HELP?!</h2>
+                <p class="lead">How old are my kids?</p>
+                <div class="table-responsive" id="existingNames"></div>
+              </div>
+
+                <div class="col-md-6 order-md-1">
+                  <h4 class="mb-3">Add Name</h4>
+                    <form id="addName" class="needs-validation" novalidate>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="firstName">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                          Valid name is required.
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="birthday">Last name</label>
+                        <input type="date" class="form-control" id="date" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                          Valid date is required.
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" onclick="return addName();">Add Name</button>
+                </form>
+                </div>
+              </div>
+        
+            </div>
+        
+            
+                    <script>
+                            function calculateAge(birthday) { // birthday is a date
+                                console.log(birthday);
+                                var ageDifMs = Date.now() - birthday;
+                                var ageDate = new Date(ageDifMs); // miliseconds from epoch
+                                return Math.abs(ageDate.getUTCFullYear() - 1970);
+                            }
+
+                            function parseNames() {
+                                var url_string = window.location.href;
+                                var url = new URL(url_string);
+                    
+                                var params=[];
+                                for (let p of url.searchParams) {
+                                    var values = [];
+                                    values.push(p[0]);
+                                    values.push(calculateAge(Date.parse(p[1])));
+                                    values.push(p[1]);
+                                    params.push(values)
+                                }    
+
+                                params.sort(function(a,b) {return b[1] - a[1];});
+
+                                return params
+                            }
+
+                            function createTable(rows)
+                            {
+                                var table = document.createElement('table');
+                                table.classList.add('table');
+
+                                var tableHeader = document.createElement('thead');
+                                var header = document.createElement('tr');
+                                var headerCell = document.createElement('th');
+                                headerCell.appendChild(document.createTextNode("Name"));
+                                header.appendChild(headerCell);
+
+                                headerCell = document.createElement('th');
+                                headerCell.appendChild(document.createTextNode("Age"));
+                                header.appendChild(headerCell);
+                                
+                                
+                                headerCell = document.createElement('th');
+                                headerCell.appendChild(document.createTextNode(""));
+                                header.appendChild(headerCell);
+
+                                tableHeader.appendChild(header);
+
+                                table.appendChild(tableHeader);
+
+                                var tableBody = document.createElement('tbody');
+                                var i = 0;
+
+                                for (let p of rows) {
+                                    console.log(p);
+                    
+                                    var row = document.createElement('tr');
+                    
+                                    var cell = document.createElement('td');
+                                        cell.appendChild(document.createTextNode(p[0]));
+                                        row.appendChild(cell);
+                                    
+                                    var cell = document.createElement('td');
+                                        cell.appendChild(document.createTextNode(p[1]));
+                                        row.appendChild(cell);
+
+                                    var cell = document.createElement("td");
+                                    var button = document.createElement("button");
+                                    button.appendChild(document.createTextNode("remove"));
+                                    button.onclick = function(){ remove(this); };
+                                    button.value = i;
+                                    cell.appendChild(button);
+                                    row.appendChild(cell);
+
+                                    tableBody.appendChild(row);
+                                    i++;
+                                }
+                    
+                                table.appendChild(tableBody);
+                                document.getElementById("existingNames").appendChild(table);
+                            }
+
+                            function onLoad()
+                            {
+                                var names = parseNames();
+                                createTable(names);
+                            }
+
+                            function addName()
+                            {
+                                console.log(document.getElementById("addName").classList);
+                                console.log(document.getElementById("name").value);
+                                console.log(document.getElementById("date").value);
+
+                                var form = document.getElementById("addName");
+                                var isValid = true;
+
+                                if (form.checkValidity() === false) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    isValid = false;
+                                }
+
+                                form.classList.add('was-validated');
+                  
+                                if (!isValid)
+                                {
+                                    console.log("NOT VALID");
+                                    return false;
+                                }
+
+                                var names = parseNames();
+
+                                var newName = [];
+                                newName.push(document.getElementById("name").value);
+                                newName.push(0);
+                                newName.push(document.getElementById("date").value);
+
+                                names.push(newName);
+
+                                window.location.href = generateUri(names);
+
+                                return false;
+                            }
+
+                            function getCleanUri()
+                            {
+                                var uri = window.location.href;
+
+                                console.log(uri);
+
+                                if (uri.indexOf("?") > 0) {
+                                    var clean_uri = uri.substring(0, uri.indexOf("?"));
+                                    return clean_uri;
+                                }
+
+                                return uri;
+                            }
+
+                            function generateUri(names)
+                            {
+                                var uri = getCleanUri();
+
+                                var qs = "";
+                                if (names.length > 0)
+                                {
+                                    for(let n of names)
+                                    {
+                                        if (qs !== "") qs += "&";
+
+                                        qs += n[0] + "=" + n[2];
+                                    }
+
+                                    uri += "?" + qs;
+                                }
+                                console.log(uri);
+                                return uri;
+                            }
+
+                            function remove(i)
+                            {
+                                var names = parseNames();
+
+                                names.splice(i.value, 1);
+
+                                window.location.href = generateUri(names);
+                            }
+
+                        </script>
+                
+          </body>
+        </html>
