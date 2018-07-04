@@ -1,225 +1,263 @@
 <html>
-    <head>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <script> (adsbygoogle = window.adsbygoogle || []).push({
+
+<head>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script> (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-1110814073017760",
             enable_page_level_ads: true
-            });
-            </script> 
-            
-        <title>How Old</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/es-us.js"></script>
+    <title>How Old</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
 
 
-        </head>
-    
-        <body class="bg-light" onload="onLoad()">
+</head>
 
-            <div class="container">
-              <div class="py-5 text-center">
-                <h2>HELP?!</h2>
-                <p class="lead">How old are my kids?</p>
-                <div class="table-responsive" id="existingNames"></div>
-              </div>
+<body class="bg-light" onload="onLoad()">
+    <div class="jumbotron">
 
-                <div class="col-md-6 order-md-1">
-                  <h4 class="mb-3">Add Name</h4>
-                    <form id="addName" class="needs-validation" novalidate>
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="firstName">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="" value="" required>
-                        <div class="invalid-feedback">
-                          Valid name is required.
-                        </div>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="birthday">Birthday</label>
-                        <input type="date" class="form-control" id="date" placeholder="" value="" required>
-                        <div class="invalid-feedback">
-                          Valid date is required.
-                        </div>
-                      </div>
+        <div class="container">
+            <h1 class="display-4 text-center">How old are my kids?!</h1>
+
+            <hr class="mb-4">
+            <div class="container col-10" id="existingNames"></div>
+
+        </div>
+    </div>
+    <div class="container">
+
+        <h4 class="mb-3">Add Name</h4>
+        <form id="addName" class="needs-validation" novalidate>
+            <div class="row align-items-center">
+                <div class="col-3 mb-4">
+                    <label for="firstName">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                        Valid name is required.
                     </div>
-                    
-                    <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" onclick="return addName();">Add Name</button>
-                </form>
                 </div>
-              </div>
-        
+
+                <div class="col-4 mb-4">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" class="form-control" id="birthday" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                        Valid birthday is required.
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary btn-lg btn-block" onclick="return addName();">Add Name</button>
+
+                </div>
             </div>
-        
-            
-                    <script>
-                            function calculateAge(birthday) { // birthday is a date
-                                console.log(birthday);
-                                var ageDifMs = Date.now() - birthday;
-                                var ageDate = new Date(ageDifMs); // miliseconds from epoch
-                                return Math.abs(ageDate.getUTCFullYear() - 1970);
-                            }
 
-                            function parseNames() {
-                                var url_string = window.location.href;
-                                var url = new URL(url_string);
-                    
-                                var params=[];
-                                for (let p of url.searchParams) {
-                                    var values = [];
-                                    values.push(p[0]);
-                                    values.push(calculateAge(Date.parse(p[1])));
-                                    values.push(p[1]);
-                                    params.push(values)
-                                }    
+            <hr class="mb-4">
+        </form>
 
-                                params.sort(function(a,b) {return b[1] - a[1];});
+    </div>
+    <br/>
+    <br/>
+    <div class="container">
+        <p>HowOldAreMyKids.com is a service that helps forgetful parents remember how old their children are right now. Being
+            a parent of four, this can be challenging at times. When someone asks me how old my kids are, I honestly don't
+            know.
+        </p>
+        <p>Use this site by entering your kids' names and birthdays. Then, store a bookmark to the page. No information is stored
+            on our servers.</p>
+    </div>
 
-                                return params
-                            }
+    <script>
+        function calculateAge(birthday) { // birthday is a date
+            console.log(birthday);
+            var ageDifMs = Date.now() - birthday;
+            var ageDate = new Date(ageDifMs); // miliseconds from epoch
+            return Math.abs(ageDate.getUTCFullYear() - 1970);
+        }
 
-                            function createTable(rows)
-                            {
-                                var table = document.createElement('table');
-                                table.classList.add('table');
+        function parseNames() {
+            var url_string = window.location.href;
+            var url = new URL(url_string);
 
-                                var tableHeader = document.createElement('thead');
-                                var header = document.createElement('tr');
-                                var headerCell = document.createElement('th');
-                                headerCell.appendChild(document.createTextNode("Name"));
-                                header.appendChild(headerCell);
+            var params = [];
+            for (let p of url.searchParams) {
+                var values = [];
+                values.push(p[0]);
+                values.push(calculateAge(Date.parse(p[1])));
+                values.push(p[1]);
+                params.push(values)
+            }
 
-                                headerCell = document.createElement('th');
-                                headerCell.appendChild(document.createTextNode("Age"));
-                                header.appendChild(headerCell);
-                                
-                                
-                                headerCell = document.createElement('th');
-                                headerCell.appendChild(document.createTextNode(""));
-                                header.appendChild(headerCell);
+            params.sort(function (a, b) { return b[1] - a[1]; });
 
-                                tableHeader.appendChild(header);
+            return params
+        }
 
-                                table.appendChild(tableHeader);
+        function createTable(rows) {
+            var table = document.createElement('div');
+            table.classList.add('container');
 
-                                var tableBody = document.createElement('tbody');
-                                var i = 0;
+            var tableHeader = document.createElement('div');
+            tableHeader.classList.add("row");
+            var headerCell = document.createElement('div');
+            headerCell.classList.add("col-3");
+            headerCell.classList.add("h5");
+            headerCell.classList.add("text-left");
+            headerCell.appendChild(document.createTextNode("Name"));
+            tableHeader.appendChild(headerCell);
 
-                                for (let p of rows) {
-                                    console.log(p);
-                    
-                                    var row = document.createElement('tr');
-                    
-                                    var cell = document.createElement('td');
-                                        cell.appendChild(document.createTextNode(p[0]));
-                                        row.appendChild(cell);
-                                    
-                                    var cell = document.createElement('td');
-                                        cell.appendChild(document.createTextNode(p[1]));
-                                        row.appendChild(cell);
+            var headerCell = document.createElement('div');
+            headerCell.classList.add("col-1");
+            headerCell.classList.add("h5");
+            headerCell.classList.add("text-right");
+            headerCell.appendChild(document.createTextNode("Age"));
+            tableHeader.appendChild(headerCell);
 
-                                    var cell = document.createElement("td");
-                                    var button = document.createElement("button");
-                                    button.appendChild(document.createTextNode("remove"));
-                                    button.onclick = function(){ remove(this); };
-                                    button.value = i;
-                                    cell.appendChild(button);
-                                    row.appendChild(cell);
+            var headerCell = document.createElement('div');
+            headerCell.classList.add("col");
+            headerCell.classList.add("h5");
+            headerCell.classList.add("text-right");
+            headerCell.appendChild(document.createTextNode("Birthday"));
+            tableHeader.appendChild(headerCell);
 
-                                    tableBody.appendChild(row);
-                                    i++;
-                                }
-                    
-                                table.appendChild(tableBody);
-                                document.getElementById("existingNames").appendChild(table);
-                            }
+            var headerCell = document.createElement('div');
+            headerCell.classList.add("col");
+            headerCell.classList.add("h5");
+            headerCell.appendChild(document.createTextNode(""));
+            tableHeader.appendChild(headerCell);
 
-                            function onLoad()
-                            {
-                                var names = parseNames();
-                                createTable(names);
-                            }
+            table.appendChild(tableHeader);
 
-                            function addName()
-                            {
-                                console.log(document.getElementById("addName").classList);
-                                console.log(document.getElementById("name").value);
-                                console.log(document.getElementById("date").value);
+            var i = 0;
 
-                                var form = document.getElementById("addName");
-                                var isValid = true;
+            for (let p of rows) {
+                console.log(p);
 
-                                if (form.checkValidity() === false) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    isValid = false;
-                                }
+                var row = document.createElement('div');
+                row.classList.add("row");
+                row.classList.add("mb-3");
+                row.classList.add("align-items-center");
 
-                                form.classList.add('was-validated');
-                  
-                                if (!isValid)
-                                {
-                                    console.log("NOT VALID");
-                                    return false;
-                                }
+                var cell = document.createElement('div');
+                cell.classList.add("col-3");
+                cell.classList.add("text-left");
+                cell.appendChild(document.createTextNode(p[0]));
+                row.appendChild(cell);
 
-                                var names = parseNames();
+                var cell = document.createElement('div');
+                cell.classList.add("col-1");
+                cell.classList.add("text-right");
+                cell.appendChild(document.createTextNode(p[1]));
+                row.appendChild(cell);
 
-                                var newName = [];
-                                newName.push(document.getElementById("name").value);
-                                newName.push(0);
-                                newName.push(document.getElementById("date").value);
+                var cell = document.createElement('div');
+                cell.classList.add("col");
+                cell.classList.add("text-right");
+                var d = moment(p[2], "YYYY-MM-DD");
 
-                                names.push(newName);
+                cell.appendChild(document.createTextNode(d.format("l")));
+                row.appendChild(cell);
 
-                                window.location.href = generateUri(names);
+                var cell = document.createElement('div');
+                cell.classList.add("col");
+                cell.classList.add("text-right");
+                var button = document.createElement("button");
+                button.appendChild(document.createTextNode("remove"));
+                button.onclick = function () { remove(this); };
+                button.value = i;
+                cell.appendChild(button);
+                row.appendChild(cell);
 
-                                return false;
-                            }
+                table.appendChild(row);
+                i++;
+            }
 
-                            function getCleanUri()
-                            {
-                                var uri = window.location.href;
+            document.getElementById("existingNames").appendChild(table);
+        }
 
-                                console.log(uri);
+        function onLoad() {
+            var names = parseNames();
+            createTable(names);
+        }
 
-                                if (uri.indexOf("?") > 0) {
-                                    var clean_uri = uri.substring(0, uri.indexOf("?"));
-                                    return clean_uri;
-                                }
+        function addName() {
+            console.log(document.getElementById("addName").classList);
+            console.log(document.getElementById("name").value);
+            console.log(document.getElementById("birthday").value);
 
-                                return uri;
-                            }
+            var form = document.getElementById("addName");
+            var isValid = true;
 
-                            function generateUri(names)
-                            {
-                                var uri = getCleanUri();
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+                isValid = false;
+            }
 
-                                var qs = "";
-                                if (names.length > 0)
-                                {
-                                    for(let n of names)
-                                    {
-                                        if (qs !== "") qs += "&";
+            form.classList.add('was-validated');
 
-                                        qs += n[0] + "=" + n[2];
-                                    }
+            if (!isValid) {
+                console.log("NOT VALID");
+                return false;
+            }
 
-                                    uri += "?" + qs;
-                                }
-                                console.log(uri);
-                                return uri;
-                            }
+            var names = parseNames();
 
-                            function remove(i)
-                            {
-                                var names = parseNames();
+            var newName = [];
+            newName.push(document.getElementById("name").value);
+            newName.push(0);
+            newName.push(document.getElementById("birthday").value);
 
-                                names.splice(i.value, 1);
+            names.push(newName);
 
-                                window.location.href = generateUri(names);
-                            }
+            window.location.href = generateUri(names);
 
-                        </script>
-                
-          </body>
-        </html>
+            return false;
+        }
+
+        function getCleanUri() {
+            var uri = window.location.href;
+
+            console.log(uri);
+
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                return clean_uri;
+            }
+
+            return uri;
+        }
+
+        function generateUri(names) {
+            var uri = getCleanUri();
+
+            var qs = "";
+            if (names.length > 0) {
+                for (let n of names) {
+                    if (qs !== "") qs += "&";
+
+                    qs += n[0] + "=" + n[2];
+                }
+
+                uri += "?" + qs;
+            }
+            console.log(uri);
+            return uri;
+        }
+
+        function remove(i) {
+            var names = parseNames();
+
+            names.splice(i.value, 1);
+
+            window.location.href = generateUri(names);
+        }
+
+    </script>
+
+</body>
+
+</html>
